@@ -1,11 +1,11 @@
 pipeline {
     agent any
     stages {
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/sekkarin/api-python.git'
-            }
-        }
+#        stage('Clone Repository') {
+#            steps {
+#                git 'https://github.com/sekkarin/api-python.git'
+#            }
+#        }
         stage('Install Dependencies') {
             steps {
                 sh 'pip install -r requirements.txt'
