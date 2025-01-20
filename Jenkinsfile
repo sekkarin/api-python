@@ -9,13 +9,6 @@ pipeline {
             }
                     
         }
-        stage('Install Dependencies') {
-            steps {
-                 sh 'ls'
-                 sh 'pip install flask'
-                
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t flask-app .'
