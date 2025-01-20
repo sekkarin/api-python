@@ -2,9 +2,12 @@ pipeline {
     agent any
     stages {
         stage('Clone Repository') {
-            script {
-                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/sekkarin/api-python.git']])
-            }           
+            steps{
+                script {
+                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/sekkarin/api-python.git']])
+                }   
+            }
+                    
         }
         stage('Install Dependencies') {
             steps {
