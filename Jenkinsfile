@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                 sh 'll'
+                 sh 'ls'
             }
         }
         stage('Run Tests') {
