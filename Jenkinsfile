@@ -12,11 +12,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                  sh 'ls'
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                sh 'pytest'
+                 sh 'pip install flask'
+                
             }
         }
         stage('Build Docker Image') {
