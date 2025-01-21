@@ -28,6 +28,8 @@ pipeline {
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
                         // Push the image to Docker Hub
                         sh 'docker push $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker rmi flask-app:latest'
                     }
                 }
             }
@@ -35,7 +37,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh 'docker rm -f api-app'
-                sh 'docker run -d --name api-app -p 192.168.33.10:5000:5000 flask-app:latest'
+                sh 'docker run -d --name api-app -p 5000:5000 sekkarindev/flask-app:latest'
             }
         }
     }
