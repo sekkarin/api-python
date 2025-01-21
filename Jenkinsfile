@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 192.168.33.10:5000:5000 flask-app'
+                sh 'docker run -d -p 0.0.0.0:5000:5000 flask-app'
             }
         }
     }
