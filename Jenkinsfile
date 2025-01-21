@@ -1,10 +1,10 @@
 pipeline {
     agent any
-     parameters {
-            booleanParam(name: 'Clone Repositor', defaultValue: false, description: '...')
-            booleanParam(name: 'Build Docker Image', defaultValue: false, description: '....')
-            booleanParam(name: 'Deploy', defaultValue: false, description: '...')
-    }
+    //  parameters {
+    //         booleanParam(name: 'Clone Repositor', defaultValue: false, description: '...')
+    //         booleanParam(name: 'Build Docker Image', defaultValue: false, description: '....')
+    //         booleanParam(name: 'Deploy', defaultValue: false, description: '...')
+    // }
     stages {
         stage('Clone Repository') {
             steps{
