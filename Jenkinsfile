@@ -25,9 +25,9 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                     }
-                    // Tag the Docker image with the Docker Hub repository
+                    // Correctly tag the Docker image
                     sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
-                    // Push the Docker image to Docker Hub
+                    // Push the image to Docker Hub
                     sh 'docker push $DOCKER_USERNAME/flask-app:latest'
                 }
             }
