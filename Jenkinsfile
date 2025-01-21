@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker rm api-app'
+                sh 'docker rm -f api-app'
                 sh 'docker run -d --name api-app -p 192.168.33.10:5000:5000 flask-app:latest'
             }
         }
