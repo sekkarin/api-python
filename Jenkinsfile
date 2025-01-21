@@ -11,12 +11,12 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t flask-app .'
+                sh 'docker build -t flask-app:latest .'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 0.0.0.0:5000:5000 flask-app'
+                sh 'docker run -d -p 0.0.0.0:5000:5000 flask-app:latest --name api-app'
             }
         }
     }
