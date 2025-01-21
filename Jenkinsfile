@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 0.0.0.0:5000:5000 flask-app:latest --name api-app'
+                sh 'docker run -d --name api-app -p 0.0.0.0:5000:5000 flask-app:latest'
             }
         }
     }
