@@ -6,8 +6,7 @@ pipeline {
                 script {
                      checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/sekkarin/api-python.git']])
                 }   
-            }
-                    
+            }          
         }
         stage('Build Docker Image') {
             steps {
@@ -16,7 +15,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d --name api-app -p 0.0.0.0:5000:5000 flask-app:latest'
+                sh 'docker run -d --name api-app -p 192.168.33.10:5000:5000 flask-app:latest'
             }
         }
     }
