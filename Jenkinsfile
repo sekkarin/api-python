@@ -29,28 +29,17 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Use a pod template with kubectl installed
-                    podTemplate(
-                        name: 'kubectl-pod',
-                        containers: [
-                            containerTemplate(
-                                name: 'kubectl',
-                                image: 'bitnami/kubectl:latest',
-                                command: 'sleep',
-                                args: '99999'
-                            )
-                        ]
-                    ) {
-                        node('vm2') {
-                            container('kubectl') {
-                                sh """
-                                    kubectl version --client
-//                                    kubectl apply -f k8s/deployment.yaml
-//                                    kubectl apply -f k8s/service.yaml
-                                """
-                            }
-                        }
-                    }
+                    // Ensure kubectl is available in the agent or use a Kubernetes plugin.
+                    sh '''
+                        if ! command -v kubectl &> /dev/null; then
+                            echo "kubectl not found, installing..."
+                            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                            chmod +x kubectl
+                            sudo mv kubectl /usr/local/bin/
+                        fi
+                        kubectl version --client
+                        kubectl apply -f k8s/service.yaml
+                    '''
                 }
             }
         }
