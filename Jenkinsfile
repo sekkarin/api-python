@@ -28,35 +28,15 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
-                podTemplate(
-                    cloud: 'k3s',
-                    containers: [
-                        containerTemplate(
-                            name: 'kubectl',
-                            image: 'bitnami/kubectl:latest',
-                            command: 'cat',
-                            ttyEnabled: true
-                        )
-                    ],
-                    volumes: [
-                        hostPathVolume(
-                            mountPath: '/root/.kube',
-                            hostPath: '/home/jenkins/.kube'
-                        )
-                    ]
-                ) {
-                    node('k3s') {
-                        container('kubectl') {
-                            sh '''
+                podTemplate(agentContainer: 'k3s-jenkins', cloud: 'k3s', label: 'k3s-jenkins', name: 'k3s-jenkins') {
+                   sh '''
                                 echo "Deploying to Kubernetes..."
                                 kubectl version --client
-                                kubectl apply -f k8s/service.yaml
                                 kubectl get services
                             '''
-                        }
-                    }
+                }
+            }
                 }
             }
         }
-    }
-}
+
