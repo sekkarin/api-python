@@ -36,12 +36,18 @@ pipeline {
         }
        stage('Deploy to Kubernetes') {
             steps {
-                container('kubectl') {
-                    sh """
+                podTemplate(agentInjection: true, cloud: 'k3s', name: 'k3s') {
+                     sh """
                         kubectl 
                     //    kubectl apply -f k8s/service.yaml 
                     """
                 }
+               // container('kubectl') {
+             //       sh """
+             //           kubectl 
+                    //    kubectl apply -f k8s/service.yaml 
+           //         """
+            //    }
             }
         }
     }
