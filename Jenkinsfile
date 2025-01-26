@@ -34,10 +34,14 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+       stage('Deploy to Kubernetes') {
             steps {
-                sh 'docker rm -f api-app'
-                sh 'docker run -d --name api-app -p 5000:5000 sekkarindev/flask-app:latest'
+                container('kubectl') {
+                    sh """
+                        kubectl 
+                    //    kubectl apply -f k8s/service.yaml 
+                    """
+                }
             }
         }
     }
