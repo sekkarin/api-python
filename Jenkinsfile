@@ -41,12 +41,12 @@ pipeline {
                             )
                         ]
                     ) {
-                        node('kubectl-pod') {
+                        node('vm2') {
                             container('kubectl') {
                                 sh """
                                     kubectl version --client
-                                    kubectl apply -f k8s/deployment.yaml
-                                    kubectl apply -f k8s/service.yaml
+//                                    kubectl apply -f k8s/deployment.yaml
+//                                    kubectl apply -f k8s/service.yaml
                                 """
                             }
                         }
