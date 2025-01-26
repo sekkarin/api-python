@@ -1,52 +1,46 @@
 pipeline {
-    agent {
-        kubernetes {
-            cloud 'k3s' // Specify the K3s cloud configured in Jenkins
-            label 'kubectl-agent' // Define a unique label for the pod
-            yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    jenkins: kubectl-agent
-spec:
-  containers:
-  - name: kubectl
-    image: bitnami/kubectl:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - name: kube-config
-      mountPath: /root/.kube
-  volumes:
-  - name: kube-config
-    hostPath:
-      path: /home/jenkins/.kube
-      type: Directory
-"""
-        }
-    }
+    agent any
+    //  parameters {
+    //         booleanParam(name: 'Clone Repositor', defaultValue: false, description: '...')
+    //         booleanParam(name: 'Build Docker Image', defaultValue: false, description: '....')
+    //         booleanParam(name: 'Deploy', defaultValue: false, description: '...')
+    // }
     stages {
-        stage('Verify Kubernetes') {
+        stage('Clone Repository') {
+            steps{
+                script {
+                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/sekkarin/api-python.git']])
+                }   
+            }          
+        }
+        stage('Build Docker Image') {
             steps {
-                container('kubectl') {
-                    sh '''
-                        echo "Checking Kubernetes connectivity..."
-                        kubectl version --client
-                        kubectl get nodes
-                    '''
+                sh 'docker build -t flask-app:latest .'
+            }
+        }
+      stage('Push to Docker Hub') {
+            steps {
+                script {
+                    // Log in to Docker Hub using Jenkins credentials
+                    withCredentials([usernamePassword(credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                        // Correctly tag the Docker image
+                        sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
+                        // Push the image to Docker Hub
+                        sh 'docker push $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker rmi flask-app:latest'
+                    }
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
+       stage('Deploy to Kubernetes') {
             steps {
-                container('kubectl') {
-                    sh '''
-                        echo "Deploying to K3s cluster..."
-                        kubectl apply -f k8s/service.yaml
-                        kubectl get services
-                    '''
+                podTemplate(agentInjection: true, cloud: 'k3s', name: 'k3s') {
+                     sh """
+                        kubectl 
+                    //    kubectl apply -f k8s/service.yaml 
+                    """
                 }
             }
         }
