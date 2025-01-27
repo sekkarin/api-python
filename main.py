@@ -4,7 +4,6 @@ app = Flask(__name__)
 
 # Simulated in-memory database
 data = []
-
 # Create - Add a new item
 @app.route('/items', methods=['POST'])
 def create_item():
