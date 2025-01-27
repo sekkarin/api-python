@@ -19,10 +19,13 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'docker push $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker push $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
+                        sh 'docker rmi $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'docker rmi flask-app:latest'
-                        sh 'docker image prune -af --filter "until=15m"'
+                        // sh 'docker image prune -af --filter "until=30m"'
                     }
                 }
             }
@@ -37,10 +40,10 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig-k3s', variable: 'KUBECONFIG_PATH')]) {
                     sh '''
-                echo "Deploying with Helm..."
-                cp "$KUBECONFIG_PATH" "$KUBECONFIG_FILE"
-                helm --kubeconfig="$KUBECONFIG_FILE" list -a
-            '''
+                        echo "Deploying with Helm..."
+                        cp "$KUBECONFIG_PATH" "$KUBECONFIG_FILE"
+                        helm --kubeconfig="$KUBECONFIG_FILE" list -a
+                    '''
                 }
             }
         }
