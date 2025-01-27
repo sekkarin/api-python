@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        kubeconfig = credentials('kubeconfig-k3s')
+        KUBECONFIG = '/root/.kube/config'
     }
     stages {
         stage('Clone Repository') {
@@ -35,7 +35,7 @@ pipeline {
                 docker { image 'alpine/k8s:1.29.13' }
             }
             steps {
-                sh 'helm --kubeconfig $kubeconfig list'
+                sh 'helm --kubeconfig $KUBECONFIG list'
             }
         }
     }
