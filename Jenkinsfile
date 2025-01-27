@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        KUBECONFIG_FILE = '/tmp/kubeconfig' // Path inside the container
-    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -34,12 +31,17 @@ pipeline {
             agent {
                 docker { image 'alpine/k8s:1.29.13' }
             }
-            withCredentials([file(credentialsId: 'kubeconfig-k3s', variable: 'KUBECONFIG_PATH')]) {
-                sh '''
+            environment {
+                KUBECONFIG_FILE = '/tmp/kubeconfig' // Path inside the container
+            }
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig-k3s', variable: 'KUBECONFIG_PATH')]) {
+                    sh '''
                 echo "Deploying with Helm..."
                 cp "$KUBECONFIG_PATH" "$KUBECONFIG_FILE"
                 helm --kubeconfig="$KUBECONFIG_FILE" list
             '''
+                }
             }
         }
     }
