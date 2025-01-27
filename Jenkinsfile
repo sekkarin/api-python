@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        GIT_BRANCH = env.GIT_BRANCH.replace('origin/', '')
+        BRANCH_NAME = "${GIT_BRANCH}-${BUILD_ID}"
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -16,18 +20,14 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo "The branch name is: ${scm}"
-                }
-                script {
                     withCredentials([usernamePassword(credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
-                        sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:$BUILD_TAG'
-                        sh 'printenv'
+                        sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:$BRANCH_NAME'
                         sh 'docker push $DOCKER_USERNAME/flask-app:latest'
-                        sh 'docker push $DOCKER_USERNAME/flask-app:$BUILD_TAG'
+                        sh 'docker push $DOCKER_USERNAME/flask-app:$BRANCH_NAME'
                         sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
-                        sh 'docker rmi $DOCKER_USERNAME/flask-app:$BUILD_TAG'
+                        sh 'docker rmi $DOCKER_USERNAME/flask-app:$BRANCH_NAME'
                         sh 'docker rmi flask-app:latest'
                         // sh 'docker image prune -af --filter "until=30m"'
                     }
