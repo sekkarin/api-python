@@ -42,7 +42,11 @@ pipeline {
                 KUBECONFIG_FILE = '/tmp/kubeconfig' // Path inside the container
             }
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-k3s', variable: 'KUBECONFIG_PATH')]) {
+                withCredentials([file(credentialsId: 'kubeconfig-k3s', variable: 'KUBECONFIG_PATH'),
+                usernamePassword(
+                    credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', 
+                    usernameVariable: 'DOCKER_USERNAME'
+                )]) {
                     sh '''
                         echo "Deploying with Helm..."
                         cp "$KUBECONFIG_PATH" "$KUBECONFIG_FILE"
