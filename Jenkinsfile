@@ -16,7 +16,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    echo "The branch name is: ${env.BRANCH_NAME}"
+                    echo "The branch name is: ${scm}"
                 }
                 script {
                     withCredentials([usernamePassword(credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
