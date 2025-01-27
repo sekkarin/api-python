@@ -21,6 +21,7 @@ pipeline {
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'printenv'
+                        sh "echo \"${env.BRANCH_NAME}\""
                         sh 'docker push $DOCKER_USERNAME/flask-app:latest'
                         sh 'docker push $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
