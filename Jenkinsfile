@@ -39,7 +39,7 @@ pipeline {
                     sh '''
                 echo "Deploying with Helm..."
                 cp "$KUBECONFIG_PATH" "$KUBECONFIG_FILE"
-                helm --kubeconfig="$KUBECONFIG_FILE" list
+                helm --kubeconfig="$KUBECONFIG_FILE" list -a
             '''
                 }
             }
