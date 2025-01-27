@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'my-kubernetes-agent'
-        }
-    }
+    agent any
     environment {
         kubeconfig = credentials('kubeconfig-k3s')
     }
