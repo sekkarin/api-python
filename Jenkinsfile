@@ -35,7 +35,7 @@ pipeline {
                 docker { image 'alpine/k8s:1.29.13' }
             }
             steps {
-                sh 'helm  list'
+                sh 'helm --kubeconfig="$KUBECONFIG" list'
             }
         }
     }
