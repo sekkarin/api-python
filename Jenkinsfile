@@ -1,5 +1,12 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            label 'my-kubernetes-agent'
+        }
+    }
+    environment {
+        kubeconfig = credentials('kubeconfig-k3s')
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -27,16 +34,13 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') {
-            steps {
-                podTemplate(agentContainer: 'k3s-jenkins', cloud: 'k3s', label: 'k3s-jenkins', name: 'k3s-jenkins') {
-                   sh '''
-                                echo "Deploying to Kubernetes..."
-                                kubectl version --client
-                                kubectl get services
-                            '''
-                }
+            agent {
+                docker { image 'alpine/k8s:1.29.13' }
             }
-                }
+            steps {
+                sh 'helm --kubeconfig $kubeconfig list'
             }
         }
+    }
+}
 
