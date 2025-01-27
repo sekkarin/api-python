@@ -25,7 +25,7 @@ pipeline {
                         sh 'docker push $DOCKER_USERNAME/flask-app:latest'
                         sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
                         sh 'docker rmi flask-app:latest'
-                        sh 'docker image prune -af --filter "until=15m'
+                        sh 'docker image prune -af --filter "until=15m"'
                     }
                 }
             }
