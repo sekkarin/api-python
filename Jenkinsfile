@@ -46,7 +46,7 @@ pipeline {
                     sh '''
                         echo "Deploying with Helm..."
                         cp "$KUBECONFIG_PATH" "$KUBECONFIG_FILE"
-                        helm --kubeconfig="$KUBECONFIG_FILE" list -a
+                        helm --kubeconfig="$KUBECONFIG_FILE" upgrade --install flask-app ./api-python --set image.repository=$DOCKER_USERNAME/flask-app,image.tag=$BRANCH_NAME
                     '''
                 }
             }
