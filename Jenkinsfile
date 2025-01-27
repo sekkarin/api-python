@@ -16,12 +16,14 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
+                    echo "The branch name is: ${env.BRANCH_NAME}"
+                }
+                script {
                     withCredentials([usernamePassword(credentialsId: '856b9510-0071-4cae-b516-2217b5cddadf', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:latest'
                         sh 'docker tag flask-app:latest $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'printenv'
-                        sh "echo \"${env.BRANCH_NAME}\""
                         sh 'docker push $DOCKER_USERNAME/flask-app:latest'
                         sh 'docker push $DOCKER_USERNAME/flask-app:$BUILD_TAG'
                         sh 'docker rmi $DOCKER_USERNAME/flask-app:latest'
